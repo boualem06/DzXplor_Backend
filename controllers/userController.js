@@ -69,10 +69,22 @@ const loginUser=async (req,res)=>{
     }
 }
 
+//get the actuell user
+const me=async (req,res)=>{
+    
+    const {_id,user_name,email,}=await User.findById(req.user.id) ;
+    res.status(200).json({
+        id:_id,
+        user_name,
+        email,
+    })
+} 
+
 
 module.exports = {
     NewUser,
-    loginUser
+    loginUser,
+    me
 }
 
 

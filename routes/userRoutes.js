@@ -3,9 +3,12 @@ const router = express.Router();
 require("dotenv").config();
 const userControllers=require('../controllers/userController')
 const User=require('../models/user')
+const {protect}=require('../midleware/authmidleware')
 
 router.post("/newUser",userControllers.NewUser) ;
 router.post("/login",userControllers.loginUser) ;
+router.get("/getMe",protect,userControllers.me) ;
+
 
 
 module.exports=router ;
