@@ -41,7 +41,38 @@ const NewUser = async (req, res) => {
     })
 }
 
+//the function that generate tokens 
+const generateToken=(id)=>{
+    return jwt.sign({id},process.env.JWT_SECRET,{
+        expiresIn:'30d',
+    })
+}
+
+
+const loginUser=async (req,res)=>{
+    const {email,password}=req.body ;
+    // check for user email 
+    const user=await User.findOne({email}) ;
+    if(user && (await bcrypt.compare(password,user.password)))
+    {
+        res.json({
+            _id:user.id,
+            user_name:user.user_name,
+            email:user.email,
+            status:201,
+            token:generateToken(user.id)
+        })
+    }else
+    {
+        res.status(400) ;
+        res.json({message:'Invalid credentials',status:400})
+    }
+}
+
 
 module.exports = {
-    NewUser
+    NewUser,
+    loginUser
 }
+
+
