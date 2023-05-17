@@ -73,56 +73,42 @@ const getThreeRandomEvents = async (req, res) => {
 };
 
 
-//events filtered by state
-const filtreEventsByStatus = async (req, res) => {
-  const { status } = req.body;
+
+//filter events by title, date and status
+const eventsFilter = async (req, res) => {
+  const { status, date, event_title } = req.body;
+
+  const query = {};
+
+  if (status) {
+    query.status = status;
+  }
+
+  if (date) {
+    query.date = date;
+  }
+
+  if (event_title) {
+    query.event_title = event_title;
+  }
 
   try {
-    const filteredEvents = await Event.find({ status });
-
-    res.json(filteredEvents);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Internal Server Error' });
+    const events = await Event.find(query);
+    res.json(events);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: 'Server error' });
   }
 };
 
 
-//search events by title
-const searchEventsByTitle = async (req, res) => {
-  const { event_title } = req.body;
 
-  try {
-    const filteredEvents = await Event.find({ event_title });
-
-    res.json(filteredEvents);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-};
-
-
-//filter events by date 
-const filterEventsByDate = async (req, res) => {
-  const { date } = req.body;
-
-  try {
-    const filteredEvents = await Event.find({ date });
-
-    res.json(filteredEvents);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-};
+    
 
 module.exports = {
     newEvent,
     updateEvent,
     deleteEvent,
     getThreeRandomEvents,
-    filtreEventsByStatus,
-    searchEventsByTitle,
-    filterEventsByDate,
+    eventsFilter,
 }
