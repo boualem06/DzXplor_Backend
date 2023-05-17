@@ -27,7 +27,23 @@ const getComments = async (req, res) => {
     })
 }
 
+//get the last three comments 
+const getLastT3Comments = async (req, res) => {
+    try {
+      const comments = await Comment.find()
+        .sort({ createdAt: -1 }) // Sort in descending order based on createdAt field
+        .limit(3); // Limit the number of results to 3
+  
+      res.json(comments);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  };
+
+
 module.exports={
     newComment,
-    getComments
+    getComments,
+    getLastT3Comments
 }
