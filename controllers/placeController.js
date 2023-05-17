@@ -169,41 +169,10 @@ const getFilteredPlaces = async (req, res) => {
   };
 
 
-const getEventsOfPlace = async (req, res) => {
-  const { placeId } = req.body;
-
-  try {
-    const events = await Event.find({ places: { $in: [placeId] } });
-
-    if (events.length === 0) {
-      return res.status(404).json({ message: 'No events found for the specified place ID' });
-    }
-
-    res.json(events);
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: 'Server error' });
-  }
-};
 
 
-//get comments of a place
-const getCommentsOfPlace = async (req, res) => {
-  const { placeId } = req.body;
 
-  try {
-    const comments = await Comment.find({ idplace: placeId });
 
-    if (comments.length === 0) {
-      return res.status(404).json({ message: 'No comments found for the specified place ID' });
-    }
-
-    res.json(comments);
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: 'Server error' });
-  }
-};
 
 //get a place by its id and all the comments and events of this place
 
@@ -244,7 +213,6 @@ module.exports = {
     getPlaces,
     deletePlace,
     getFilteredPlaces,
-    getEventsOfPlace,
-    getCommentsOfPlace,
     getPlace,
+    getMostViewedPlaces,
 }
