@@ -11,6 +11,8 @@ router.post("/updatePlace",protect,placeControllers.updatePlace) ;
 router.get("/getPlaces",protect,placeControllers.getPlaces) ;
 router.delete("/deletePlace",protect,placeControllers.deletePlace) ;
 router.get("/filterPlaces",protect,placeControllers.getFilteredPlaces) ;
+router.get("/getEventsofPlace",placeControllers.getEventsOfPlace) ;
+
 
 
 
