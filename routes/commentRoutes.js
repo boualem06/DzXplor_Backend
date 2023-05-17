@@ -10,6 +10,7 @@ router.post("/newComment",commentControllers.newComment) ;
 router.get("/getComments",commentControllers.getComments) ;
 router.get("/getLastThreeComments",commentControllers.getLastT3Comments) ;
 router.get("/getNbComments",protect,commentControllers.getTotalCommentCount) ;
+router.get("/getCommentsByMonth",protect,commentControllers.getCommentsByMonth) ;
 
 
 
