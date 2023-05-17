@@ -187,6 +187,24 @@ const getEventsOfPlace = async (req, res) => {
 };
 
 
+//get comments of a place
+const getCommentsOfPlace = async (req, res) => {
+  const { placeId } = req.body;
+
+  try {
+    const comments = await Comment.find({ idplace: placeId });
+
+    if (comments.length === 0) {
+      return res.status(404).json({ message: 'No comments found for the specified place ID' });
+    }
+
+    res.json(comments);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
 
 
 
@@ -198,4 +216,5 @@ module.exports = {
     deletePlace,
     getFilteredPlaces,
     getEventsOfPlace,
+    getCommentsOfPlace
 }
