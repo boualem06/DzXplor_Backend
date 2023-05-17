@@ -205,6 +205,35 @@ const getCommentsOfPlace = async (req, res) => {
   }
 };
 
+//get a place by its id and all the comments and events of this place
+
+const getPlace = async (req, res) => {
+  const { placeId } = req.body;
+
+  try {
+    // Get the place details
+    const place = await Place.findById(placeId);
+
+    if (!place) {
+      return res.status(404).json({ message: 'Place not found' });
+    }
+
+    // Increment the number of views
+    place.view += 1;
+    await place.save();
+
+    // Get the comments for the place
+    const comments = await Comment.find({ idplace: placeId });
+
+    // Get the events for the place
+    const events = await Event.find({ places: { $in: [placeId] } });
+
+    res.json({ place, comments, events });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
 
 
 
@@ -216,5 +245,6 @@ module.exports = {
     deletePlace,
     getFilteredPlaces,
     getEventsOfPlace,
-    getCommentsOfPlace
+    getCommentsOfPlace,
+    getPlace,
 }
