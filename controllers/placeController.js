@@ -5,9 +5,6 @@ const newPlace = async (req, res) => {
 
     const { place_title, address, state, category, opening_hour, closing_hour, transport, city, theme, description, images, lat, long, view } = req.body;
 
-
-
-
     const place = await Place.create({
         place_title,
         address,
@@ -45,14 +42,6 @@ const newPlace = async (req, res) => {
 }
 
 
-//update place 
-// const updatePlace = async(req, res) => {
-    
-//     Place.updateOne({_id:req.body.id},{$set: { place_title:req.body.place_title, address:req.body.address, state:req.body.state, category:req.body.category, opening_hour:req.body.opening_hour, closing_hour:req.body.closing_hour, transport:req.body.transport, city:req.body.city, theme:req.body.theme, description:req.body.description, images:req.body.images, lat:req.body.lat, long:req.body.long, view:req.body.view }},(err,result)=>{
-//         if(err) return console.log(err)
-//         res.json(result) ;
-//     })
-// }
 
 
 //this is the code to update a place 
@@ -88,6 +77,7 @@ const updatePlace = async (req, res) => {
   };
 
 
+
 //get all the places 
 const getPlaces = async (req, res) => {
     Place.find().then((data) => {
@@ -96,9 +86,20 @@ const getPlaces = async (req, res) => {
     })
 }
 
+//delete place by id 
+const deletePlace=async (req,res)=>{
+    const deletedTour= await Place.deleteOne({_id:req.body.id})
+    res.status(200).json(
+        deletedTour
+    )
+}
+
+
+
 
 module.exports={
     newPlace,
     updatePlace,
-    getPlaces
+    getPlaces,
+    deletePlace
 }
