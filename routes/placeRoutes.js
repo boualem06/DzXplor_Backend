@@ -13,6 +13,7 @@ router.delete("/deletePlace",protect,placeControllers.deletePlace) ;
 router.get("/filterPlaces",protect,placeControllers.getFilteredPlaces) ;
 router.get("/getEventsofPlace",placeControllers.getEventsOfPlace) ;
 router.get("/getCommentsOfPlace",placeControllers.getCommentsOfPlace) ;
+router.get("/getPlace",placeControllers.getPlace) ;
 
 
 
