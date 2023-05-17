@@ -10,8 +10,7 @@ router.post("/newEvent",protect,eventsController.newEvent) ;
 router.put('/updateEvent',protect, eventsController.updateEvent);
 router.delete("/deleteEvent",protect,eventsController.deleteEvent) ;
 router.get("/get3RandomEvents",eventsController.getThreeRandomEvents) ;
-router.get("/filterEventByStatus",eventsController.filtreEventsByStatus) ; 
-router.get("/searchEventsByTitle",eventsController.searchEventsByTitle) ;
-router.get("/filterEventsByDate",eventsController.filterEventsByDate) ;
+router.get("/eventsFilter",eventsController.eventsFilter) ;
+
 
 module.exports=router ;
