@@ -41,9 +41,22 @@ const getLastT3Comments = async (req, res) => {
     }
   };
 
+//get the total number of comments 
+const getTotalCommentCount = async (req, res) => {
+    try {
+      const totalComments = await Comment.countDocuments();
+  
+      res.json({ count: totalComments });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  };
+
 
 module.exports={
     newComment,
     getComments,
-    getLastT3Comments
+    getLastT3Comments,
+    getTotalCommentCount
 }
