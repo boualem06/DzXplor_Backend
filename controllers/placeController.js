@@ -77,7 +77,7 @@ const updatePlace = async (req, res) => {
 
 
 
-//get all the places 
+//get all the places with their number of comments for every place 
 const getPlaces = async (req, res) => {
     
     
@@ -128,13 +128,47 @@ const getPlaces = async (req, res) => {
 }
 
 
+
 //delete place by id 
 const deletePlace = async (req, res) => {
     const deletedTour = await Place.deleteOne({ _id: req.body.id })
+
     res.status(200).json(
         deletedTour
     )
 }
+
+
+
+//adding the filters 
+const getFilteredPlaces = async (req, res) => {
+    const { city, state, place_title } = req.body;
+  
+    const query = {};
+  
+    if (city) {
+      query.city = city;
+    }
+  
+    if (state) {
+      query.state = state;
+    }
+  
+    if (place_title) {
+      query.place_title = place_title;
+    }
+  
+    try {
+      const places = await Place.find(query);
+      res.json(places);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: 'Server error' });
+    }
+  };
+
+
+
 
 
 
@@ -145,5 +179,6 @@ module.exports = {
     newPlace,
     updatePlace,
     getPlaces,
-    deletePlace
+    deletePlace,
+    getFilteredPlaces
 }
