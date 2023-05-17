@@ -5,6 +5,8 @@ const commentControllers=require('../controllers/commentController')
 const Comment=require('../models/comment')
 
 router.post("/newComment",commentControllers.newComment) ;
+router.get("/getComments",commentControllers.getComments) ;
+
 
 
 module.exports=router ;

@@ -1,8 +1,8 @@
 const Comment=require("../models/comment")
+
+//adding new comment 
 const newComment=async(req,res)=>{
-  
     const {name_user ,job_user ,comment_content ,idplace }=req.body  ;
-  
     const comment=await Comment.create({
         name_user,
         job_user,
@@ -19,7 +19,15 @@ const newComment=async(req,res)=>{
 }
 
 
+//get all the comments 
+const getComments = async (req, res) => {
+    Comment.find().then((data) => {
+        console.log(data);
+        res.json(data);
+    })
+}
 
 module.exports={
-    newComment
+    newComment,
+    getComments
 }
