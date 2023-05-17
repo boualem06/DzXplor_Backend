@@ -1,5 +1,6 @@
 const Place = require("../models/place")
 const Comment=require("../models/comment")
+const Event= require("../models/event")
 //adding new place 
 const newPlace = async (req, res) => {
 
@@ -168,7 +169,22 @@ const getFilteredPlaces = async (req, res) => {
   };
 
 
+const getEventsOfPlace = async (req, res) => {
+  const { placeId } = req.body;
 
+  try {
+    const events = await Event.find({ places: { $in: [placeId] } });
+
+    if (events.length === 0) {
+      return res.status(404).json({ message: 'No events found for the specified place ID' });
+    }
+
+    res.json(events);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
 
 
 
@@ -180,5 +196,6 @@ module.exports = {
     updatePlace,
     getPlaces,
     deletePlace,
-    getFilteredPlaces
+    getFilteredPlaces,
+    getEventsOfPlace,
 }
