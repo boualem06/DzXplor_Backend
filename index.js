@@ -1,7 +1,9 @@
 const express = require('express')
 const { default: mongoose } = require('mongoose')
 
-const UserRoutes = require("./routes/userRoutes") ;
+const userRoutes = require("./routes/userRoutes") ;
+const commentRoutes = require("./routes/commentRoutes") ;
+const placeRoutes = require("./routes/placeRoutes") ;
 
 const app = express()
 const cors = require("cors");
@@ -18,4 +20,6 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(express.static('public'));
 
-app.use(UserRoutes);
+app.use(userRoutes);
+app.use(commentRoutes)
+app.use(placeRoutes)
