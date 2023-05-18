@@ -4,6 +4,7 @@ const { default: mongoose } = require('mongoose')
 const userRoutes = require("./routes/userRoutes") ;
 const commentRoutes = require("./routes/commentRoutes") ;
 const placeRoutes = require("./routes/placeRoutes") ;
+const eventsRoutes = require("./routes/eventsRoutes") ;
 
 const app = express()
 const cors = require("cors");
@@ -23,3 +24,4 @@ app.use(express.static('public'));
 app.use(userRoutes);
 app.use(commentRoutes)
 app.use(placeRoutes)
+app.use(eventsRoutes)

@@ -4,8 +4,9 @@ const Event= require("../models/event")
 const newEvent = async (req, res) => {
     const {  event_title, status,places, description,image,date,time } = req.body;
     const event =await Event.create({
-        event_title,
-         status,places, 
+         event_title,
+         status,
+         places, 
          description,
          image,
          date,
@@ -16,6 +17,7 @@ const newEvent = async (req, res) => {
         _id: event.id,
         event_title: event.event_title,
         status: event.status,
+        places:event.places,
         description:event.description,
         image:event.image,
         date:event.date,
@@ -74,9 +76,10 @@ const getThreeRandomEvents = async (req, res) => {
 
 
 
-//filter events by title, date and status
+
+// Filter events by title, date, and status
 const eventsFilter = async (req, res) => {
-  const { status, date, event_title } = req.body;
+  const { status, date, event_title } = req.query;
 
   const query = {};
 
@@ -103,6 +106,59 @@ const eventsFilter = async (req, res) => {
 
 
 
+//get the total number of events stored in db
+const getTotalEvent = async (req, res) => {
+  try {
+    const count = await Event.countDocuments();
+    res.json({ count });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+
+
+const getEventCountByMonth = async (req, res) => {
+  const { year } = req.query;
+
+  try {
+    const result = await Event.aggregate([
+      {
+        $match: {
+          date: { $regex: `^${year}` }
+        }
+      },
+      {
+        $group: {
+          _id: { $substr: ['$date', 0, 7] },
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          month: '$_id',
+          count: 1
+        }
+      },
+      {
+        $sort: { month: 1 }
+      }
+    ]);
+
+    res.json(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+
+
+
+
+
     
 
 module.exports = {
@@ -111,4 +167,6 @@ module.exports = {
     deleteEvent,
     getThreeRandomEvents,
     eventsFilter,
+    getTotalEvent,
+    getEventCountByMonth,
 }

@@ -1,6 +1,7 @@
 const Place = require("../models/place")
-const Comment=require("../models/comment")
 const Event= require("../models/event")
+const Comment = require("../models/comment")
+
 //adding new place 
 const newPlace = async (req, res) => {
 
@@ -35,105 +36,61 @@ const newPlace = async (req, res) => {
         city: place.city,
         theme: place.theme,
         description: place.description,
-        images: place.images,
-        lat: place.lat,
+        images : place.images ,
+        lat : place.lat ,
         long: place.long,
-        view: place.view,
+        view : place.view ,
     })
 }
+
+
 
 
 //this is the code to update a place 
 const updatePlace = async (req, res) => {
     try {
-        const result = await Place.updateOne(
-            { _id: req.body.id },
-            {
-                $set: {
-                    place_title: req.body.place_title,
-                    address: req.body.address,
-                    state: req.body.state,
-                    category: req.body.category,
-                    opening_hour: req.body.opening_hour,
-                    closing_hour: req.body.closing_hour,
-                    transport: req.body.transport,
-                    city: req.body.city,
-                    theme: req.body.theme,
-                    description: req.body.description,
-                    images: req.body.images,
-                    lat: req.body.lat,
-                    long: req.body.long,
-                    view: req.body.view
-                }
-            }
-        );
-
-        res.json(result);
-    } catch (err) {
-        console.log(err);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-};
-
-
-
-
-//get all the places with their number of comments for every place 
-const getPlaces = async (req, res) => {
-    
-    
-    const getPlacesWithCommentCounts = async () => {
-      try {
-        const placesWithCommentCounts = await Place.aggregate([
-          {
-            $lookup: {
-              from: 'comments',
-              localField: '_id',
-              foreignField: 'idplace',
-              as: 'comments'
-            }
-          },
-          {
-            $project: {
-              _id: 1,
-              place_title: 1,
-              address: 1,
-              state: 1,
-              category: 1,
-              opening_hour: 1,
-              closing_hour: 1,
-              transport: 1,
-              city: 1,
-              theme: 1,
-              description: 1,
-              images: 1,
-              lat: 1,
-              long: 1,
-              view: 1,
-              commentCount: { $size: '$comments' }
-            }
+      const result = await Place.updateOne(
+        { _id: req.body.id },
+        {
+          $set: {
+            place_title: req.body.place_title,
+            address: req.body.address,
+            state: req.body.state,
+            category: req.body.category,
+            opening_hour: req.body.opening_hour,
+            closing_hour: req.body.closing_hour,
+            transport: req.body.transport,
+            city: req.body.city,
+            theme: req.body.theme,
+            description: req.body.description,
+            images: req.body.images,
+            lat: req.body.lat,
+            long: req.body.long,
+            view: req.body.view
           }
-        ]);
-    
-        res.status(200).json(
-            placesWithCommentCounts
-        )
-      } catch (error) {
-        console.log(error);
-        throw error;
-      }
-    };
-    
-    await getPlacesWithCommentCounts();
-    
+        }
+      );
+  
+      res.json(result);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  };
+
+
+
+//get all the places 
+const getPlaces = async (req, res) => {
+    Place.find().then((data) => {
+        console.log(data);
+        res.json(data);
+    })
 }
 
-
-
 //delete place by id 
-const deletePlace = async (req, res) => {
-    const deletedTour = await Place.deleteOne({ _id: req.body.id })
-
+const deletePlace=async (req,res)=>{
+    const deletedTour= await Place.deleteOne({_id:req.body.id})
     res.status(200).json(
         deletedTour
     )
@@ -141,43 +98,9 @@ const deletePlace = async (req, res) => {
 
 
 
-//adding the filters 
-const getFilteredPlaces = async (req, res) => {
-    const { city, state, place_title } = req.body;
-  
-    const query = {};
-  
-    if (city) {
-      query.city = city;
-    }
-  
-    if (state) {
-      query.state = state;
-    }
-  
-    if (place_title) {
-      query.place_title = place_title;
-    }
-  
-    try {
-      const places = await Place.find(query);
-      res.json(places);
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({ error: 'Server error' });
-    }
-  };
-
-
-
-
-
-
-
-//get a place by its id and all the comments and events of this place
-
+//get place's details and its comments and events
 const getPlace = async (req, res) => {
-  const { placeId } = req.body;
+  const { placeId } = req.params;
 
   try {
     // Get the place details
@@ -206,13 +129,39 @@ const getPlace = async (req, res) => {
 
 
 
+//get three most viewed places
+const getMostViewedPlaces = async (req, res) => {
+  try {
+    const places = await Place.find().sort({ view: -1 }).limit(3);
+    res.json(places);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
 
-module.exports = {
+//return number of comments of a specific place 
+const numberOfCommentstByPlace = async (req, res) => {
+  const { placeId } = req.params;
+
+  try {
+    const commentCount = await Comment.countDocuments({ idplace: placeId });
+    res.json({ commentCount });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+
+
+
+module.exports={
     newPlace,
     updatePlace,
     getPlaces,
     deletePlace,
-    getFilteredPlaces,
     getPlace,
     getMostViewedPlaces,
+    numberOfCommentstByPlace,
 }
