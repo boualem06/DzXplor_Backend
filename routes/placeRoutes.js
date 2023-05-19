@@ -8,7 +8,7 @@ const {protect}=require('../midleware/authmidleware')
 
 router.post("/newPlace",protect,placeControllers.newPlace) ;
 router.post("/updatePlace",protect,placeControllers.updatePlace) ;
-router.get("/getPlaces",protect,placeControllers.getPlaces) ;
+router.get("/getPlaces",placeControllers.getPlaces) ;
 router.delete("/deletePlace",protect,placeControllers.deletePlace) ;
 
 router.get('/place/:placeId',placeControllers.getPlace);
