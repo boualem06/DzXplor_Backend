@@ -158,7 +158,7 @@ const numberOfCommentstByPlace = async (req, res) => {
 //return the number of places after the given index 
 async function getPlacesAfterIndex(req,res) {
   try {
-    const places = await Place.find().skip(req.params.index).limit(9);
+    const places = await Place.find().skip(req.params.index*9).limit(9);
     res.json( places );
   } catch (error) {
     console.error(error);
