@@ -14,6 +14,7 @@ router.delete("/deletePlace",protect,placeControllers.deletePlace) ;
 router.get('/place/:placeId',placeControllers.getPlace);
 router.get("/getMostViewedPlaces",placeControllers.getMostViewedPlaces) ;
 router.get('/NumberCommentByPlace/:placeId', placeControllers.numberOfCommentstByPlace);
+router.get('/getPlaces/:index',protect, placeControllers.getPlacesAfterIndex);
 
 
 
