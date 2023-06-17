@@ -89,15 +89,15 @@ const eventsFilter = async (req, res) => {
   // const { status, date, event_title } = req.params;
   // console.log(req.params.status)
 let query ;
-  if (req.params.status) {
+  if (req.params.status.length>1) {
     query = {... query,"status":req.params.status};
   }
 
-  if (req.params.date) {
+  if (req.params.date.length>1) {
     query = {... query,"date":req.params.date};
   }
 
-  if (req.params.event_title) {
+  if (req.params.event_title.length>1) {
     query = {... query,"event_title":req.params.event_title};
   }
   console.log(query)
