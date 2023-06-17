@@ -54,10 +54,17 @@ const updateEvent = async (req, res) => {
 
 //delete an event by its id
 const deleteEvent=async (req,res)=>{
-  const deletedTour= await Event.deleteOne({_id:req.body.id})
-  res.status(200).json(
-      deletedTour
-  )
+  try{
+    const deletedTour= await Event.deleteOne({_id:req.body.id})
+    res.status(200).json(
+        deletedTour
+    )
+  }
+  catch(err){
+    res.status(400).json(error.message)
+  }
+
+ 
 }
 
 //get three random events
@@ -79,22 +86,21 @@ const getThreeRandomEvents = async (req, res) => {
 
 // Filter events by title, date, and status
 const eventsFilter = async (req, res) => {
-  const { status, date, event_title } = req.query;
-
-  const query = {};
-
+  const { status, date, event_title } = req.params;
+  // console.log(req.params.status)
+let query ;
   if (status) {
-    query.status = status;
+    query = {... query,"status":status};
   }
 
   if (date) {
-    query.date = date;
+    query = {... query,"date":date};
   }
 
   if (event_title) {
-    query.event_title = event_title;
+    query = {... query,"event_title":event_title};
   }
-
+  console.log(query)
   try {
     const events = await Event.find(query);
     res.json(events);
@@ -120,39 +126,76 @@ const getTotalEvent = async (req, res) => {
 
 
 const getEventCountByMonth = async (req, res) => {
-  const { year } = req.query;
+  // const { year } = req.body;
 
-  try {
-    const result = await Event.aggregate([
-      {
-        $match: {
-          date: { $regex: `^${year}` }
-        }
-      },
-      {
-        $group: {
-          _id: { $substr: ['$date', 0, 7] },
-          count: { $sum: 1 }
-        }
-      },
-      {
-        $project: {
-          _id: 0,
-          month: '$_id',
-          count: 1
-        }
-      },
-      {
-        $sort: { month: 1 }
-      }
-    ]);
 
-    res.json(result);
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: 'Server error' });
+
+    // const result = await Event.aggregate([
+    //   {
+    //     $match: {
+    //       date: { $regex: `^${year}` }
+    //     }
+    //   },
+    //   {
+    //     $group: {
+    //       _id: { $substr: ['$date', 0, 7] },
+    //       count: { $sum: 1 }
+    //     }
+    //   },
+    //   {
+    //     $project: {
+    //       _id: 0,
+    //       month: '$_id',
+    //       count: 1
+    //     }
+    //   },
+    //   {
+    //     $sort: { month: 1 }
+    //   }
+    // ]);
+
+    const year = 2023; // Replace with the desired year
+
+    try {
+      const result = await Event.aggregate([
+        {
+          $match: {
+            date: {
+              $gte: new Date(year, 0, 1), // Start of the year
+              $lt: new Date(year + 1, 0, 1) // Start of the next year
+            }
+          }
+        },
+        {
+          $group: {
+            _id: {
+              month: { $month: { $toDate: "$date" } }
+            },
+            count: { $sum: 1 }
+          }
+        },
+        {
+          $project: {
+            _id: 0,
+            month: "$_id.month",
+            nb_events: "$count"
+          }
+        },
+        {
+          $sort: {
+            month: 1
+          }
+        }
+      ]);
+    res.status(200).json(result)
+    } catch (error) {
+      console.error(error);
+    }
   }
-};
+    
+    
+
+  
 
 
 async function getEventsAfterIndex(req,res) {
