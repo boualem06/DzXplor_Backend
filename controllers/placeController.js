@@ -154,6 +154,31 @@ const numberOfCommentstByPlace = async (req, res) => {
 };
 
 
+const placeFilter = async (req, res) => {
+  
+let query ;
+  if (req.params.category.length>1) {
+    query = {... query,"category":req.params.category};
+  }
+
+  if (req.params.state.length>1) {
+    query = {... query,"state":req.params.state};
+  }
+
+  if (req.params.place_title.length>1) {
+    query = {... query,"place_title":req.params.place_title};
+  }
+  console.log(query)
+  try {
+    const places = await Place.find(query);
+    res.json(places);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+
 
 //return the number of places after the given index 
 async function getPlacesAfterIndex(req,res) {
@@ -176,5 +201,6 @@ module.exports={
     getPlace,
     getMostViewedPlaces,
     numberOfCommentstByPlace,
-    getPlacesAfterIndex
+    getPlacesAfterIndex,
+    placeFilter
 }

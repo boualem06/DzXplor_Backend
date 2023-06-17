@@ -10,7 +10,7 @@ router.post("/newPlace",protect,placeControllers.newPlace) ;
 router.post("/updatePlace",protect,placeControllers.updatePlace) ;
 router.get("/getPlaces",placeControllers.getPlaces) ;
 router.delete("/deletePlace",protect,placeControllers.deletePlace) ;
-
+router.get("/placeFilter/:category/:state/:place_title", placeControllers.placeFilter);
 router.get('/place/:placeId',placeControllers.getPlace);
 router.get("/getMostViewedPlaces",placeControllers.getMostViewedPlaces) ;
 router.get('/NumberCommentByPlace/:placeId', placeControllers.numberOfCommentstByPlace);
