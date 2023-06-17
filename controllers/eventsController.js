@@ -86,19 +86,19 @@ const getThreeRandomEvents = async (req, res) => {
 
 // Filter events by title, date, and status
 const eventsFilter = async (req, res) => {
-  const { status, date, event_title } = req.params;
+  // const { status, date, event_title } = req.params;
   // console.log(req.params.status)
 let query ;
-  if (status) {
-    query = {... query,"status":status};
+  if (req.params.status) {
+    query = {... query,"status":req.params.status};
   }
 
-  if (date) {
-    query = {... query,"date":date};
+  if (req.params.date) {
+    query = {... query,"date":req.params.date};
   }
 
-  if (event_title) {
-    query = {... query,"event_title":event_title};
+  if (req.params.event_title) {
+    query = {... query,"event_title":req.params.event_title};
   }
   console.log(query)
   try {
